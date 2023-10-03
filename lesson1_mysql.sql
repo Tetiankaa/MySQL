@@ -92,4 +92,5 @@ in - selects all rows that matches any of the values
  GROUP BY - groups rows that have the same values into summary rows
 
 update - used to update specific rows
+delete - used to delete specific rows
 */
