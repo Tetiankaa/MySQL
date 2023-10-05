@@ -27,8 +27,7 @@ select * from cars where model='audi' and year>2014;
 select * from cars limit 5;
 
 /* знайти останні 5 машин */
-select  * from cars;
-select * from cars limit 5 offset 214;
+select * from cars order by id desc limit 5;
 
 /* знайти середнє арифметичне цін машини KIA */
 select avg(price) as avgPrice from cars where model='kia';
