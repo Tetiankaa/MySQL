@@ -253,3 +253,83 @@ select * from customers;
 select * from customers as a inner join customers as b on a.referral_id=b.id;
 
 select a.id, a.last_name,a.first_name, b.first_name,b.last_name from customers as a inner join customers as b on a.referral_id=b.id;
+
+/* VIEWS */
+/* a virtual table based on the result-set of an SQL-statement */
+/* if we add new data to main table, it will automatically update in view table */
+
+select * from employees;
+
+create view employee_attendance as select first_name,last_name from employees;
+
+select * from employee_attendance;
+drop view employee_attendance;
+
+/* ############### */
+alter table customers add column email varchar(50);
+update customers set email='email3@gmail.com' where id=3;
+
+create view customer_emails as select email from customers;
+select * from customer_emails;
+
+/* INDEXES (BTree data structure) */
+/* are used to find values within a specific column more quickly */
+
+show indexes from customers;
+
+create index last_name_index on customers(last_name);
+alter table customers drop index last_name_index;
+
+create index last_name_first_name_index on customers(last_name,first_name);
+
+/* SUBQUERY */
+/* a query within another query */
+
+select first_name,last_name,hourly_pay,(select avg(hourly_pay) from employees) as avg_pay from employees;
+
+select * from  employees where hourly_pay >(select avg(hourly_pay) from employees);
+
+/* ################## */
+
+select first_name,last_name from customers where id in (select distinct customer_id from transactions where customer_id is not null);
+
+/* GROUP BY */
+
+alter table transactions add order_date date;
+
+select sum(amount), order_date from transactions group by order_date;
+
+select sum(amount),customer_id from transactions group by customer_id;
+
+/* ROLLUP */
+/*  used to produce the summary output */
+
+select sum(amount),order_date from transactions group by order_date with rollup ;
+
+/* ON DELETE */
+/* ON DELETE SET NULL - when a foreign key is deleted, replace foreign key with NULL */
+/* ON DELETE CASCADE - when a foreign key is deleted, delete row */
+
+alter table transactions add constraint fk_customer_id foreign key (customer_id) references customers(id) on DELETE set null;
+delete from customers where id=1;
+select * from transactions;
+
+
+alter table transactions drop foreign key fk_customer_id;
+alter table transactions add constraint fk_transactions_id foreign key (customer_id) references customers(id) on delete cascade ;
+delete from customers where id=3;
+
+/* TRIGGERS */
+
+alter table employees add column  salary decimal(10,2);
+
+update employees set salary = hourly_pay*2080;
+
+delimiter //
+create trigger before_hourly_pay_update before update on employees
+    for each row
+begin
+    set NEW.salary = (NEW.hourly_pay * 2080);
+end;
+//
+delimiter ;
