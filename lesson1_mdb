@@ -1,0 +1,135 @@
+use tanya
+
+db.users.find()
+
+db.users.find({gender:'female'})
+db.users.find({gender:'female','address.house':45})
+
+db.users.find(
+    {gender:'female'},
+    {_id:0,name:1,age:1}
+    )
+
+db.users.find({
+    $or:[
+        {rating:2},
+        {rating:5}
+    ]
+})
+
+db.users.find({
+    $and:[
+        {gender:'female'},
+        {'address.house':45}
+    ]
+}
+    )
+
+db.users.find({age:{$in:[25,16,26]}});
+db.users.find({age:{$nin:[25,16,26]}});
+
+/* the same as $nin */
+db.users.find({
+    age:{
+        $not:{
+            $in:[25,16,26]
+        }
+    }
+})
+
+db.users.find({name:/^a/}) /* case sensitive. Name starts with small letter 'a' */
+db.users.find({name:/^a/i}) /* 'i' remove case sensitive */
+db.users.find({name:/a$/i}) /* ends with 'a' */
+db.users.find({name:/^.{2}t/i}) /* third letter 't' */
+db.users.find({name:/^k.*a$/i}) /* starts with 'k' , ends with 'a' */
+db.users.find({name:/.*v.*/i}) /* contains letter 'v' */
+
+db.users.find().sort({rating:1})
+db.users.find().sort({rating:-1})
+
+db.users.find().sort({rating:1,age:1})
+
+db.users.find().sort({rating:1,age:1}).limit(2).skip(2);
+
+db.users.find({rating:{$gt:2}})
+db.users.find({rating:{$gte:2}})
+
+db.users.find({rating:{$lt:4}})
+db.users.find({rating:{$lte:4}})
+
+db.users.find({rating:{$ne:4}})
+db.users.find({rating:{$eq:4}})
+
+db.users.find({_id:ObjectId('6524ec338b03ce5aea01d79f')});
+db.users.updateOne(
+    {_id:ObjectId('6524ec338b03ce5aea01d79f')},
+    {$set:{rating:3}}
+    )
+
+db.users.updateMany(
+    {gender:'male'},
+    {$set:{gender:'animal'}}
+    )
+
+db.users.find({"address.flat":{$gt:50}})
+
+db.users.find({studying:'java'})
+
+db.users.find({studying:{$size:2}})
+
+db.users.find({parents:{$exists:0}}) /* 1 or 0*/
+
+db.users.find({
+    $and:[
+        {studying:{$size:1}},
+        {studying:'java'}
+    ]
+}
+    )
+
+db.users.updateMany({
+    parents:{$exists:1}},
+    {$set:{'parents.$[]':'Unknown'}}
+    )
+
+db.users.deleteOne({_id:ObjectId('6524ec338b03ce5aea01d7a4')})
+
+
+mongoDb webpage => Connect => Compass => Copy the connection string => Intelijj create new database
+=> select MongoDB => pass URL => enter password => test connection => use <name of database> => right corner - JSON - click 'eye' - Text
+
+MongoDB is a database management system, that stores data in a format called BSON (Binary JSON).
+
+find() - is used to return all documents in a collection
+find({query,projection}) :
+  query - this is the criteria for selecting documents from the collection.
+ projection - is an object where we define which fields to include(1) or exclude(0).
+
+ $or operator is used to specify that you want to find documents that meet at least one of the following conditions
+ $and - is used to specify that you want to find documents that meet all of the following conditions
+
+$in - is used to include documents that match any value in a specified array.
+$nin - is used to exclude documents that match any value in a specified array.
+
+sort() - is used to sort documents in ascending(1) or descending(-1) order
+
+$gt - is used to select documents where field's value is greater than a specified value.
+$gte - is used to select documents where field's value is greater than or equal to a specified value
+
+$lt - is used to select documents where field's value is less than a specified value.
+$lte - is used to select documents where field's value is less than or equal to a specified value
+
+$ne - the operator indicating a "not equal" operation.
+$eq - the operator indicating "equal" operation.
+
+updateOne() - is used to update a single document
+set() - allows to change the value of an existing field or add a new field to a document.
+
+updateMany() - is used to update multiple documents that match filter criteria within a collection.
+
+$size - allows to find documents where the size of an array matches a given value.
+
+$exists - is used to determine whether a specific field exists within documents
+
+deleteOne() - is used to delete single document
+deleteMany() - is used to delete multiple documents that match filter criteria within a collection.
