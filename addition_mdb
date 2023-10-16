@@ -1,0 +1,61 @@
+db.collegers.insertMany(
+    [
+        {name:"Max", age:30, gpa:3.2},
+        {name:"Natalia", age:35, gpa:2.9},
+        {name:"Veronika", age:16, gpa:3.9},
+        {name:"Vlad", age:26, gpa:2.8},
+        {name:"Serhii", age:21, gpa:3.7},
+    ]
+    )
+
+db.collegers.insertOne({
+    name:"Anna",
+    age:23,
+    gpa:4.6,
+    fullTime:false,
+    registerDate: new Date(),
+    graduationDate:null,
+    courses:["java","javascript","html"],
+    address:{
+        city:"Paris",
+        street:"Main str",
+        zip:52588
+    }
+})
+
+db.collegers.find()
+
+db.collegers.find().sort({name:-1})
+db.collegers.find().sort({name:1})
+
+ db.collegers.find().sort({gpa:-1}).limit(1)
+
+ db.collegers.updateOne({name:"Max"},{$set:{fullTime:true}})
+
+db.collegers.updateOne({_id:ObjectId('6527dfcbd86af22ca9921b71')}, {$set:{fullTime:false}})
+
+db.collegers.updateOne({_id:ObjectId('6527dfcbd86af22ca9921b71')},{$unset:{fullTime:''}}) /* remove the field */
+
+db.collegers.updateMany({fullTime:{$exists:false}},{$set:{fullTime:true}})
+
+db.collegers.deleteOne({name:"Serhii"})
+
+db.collegers.find({name:{$ne:"Natalia"}})
+db.collegers.find({age:{$lt:20}})
+db.collegers.find({age:{$lte:20}})
+
+db.collegers.find({age:{$gt:20}})
+db.collegers.find({age:{$gte:20}})
+
+db.collegers.find({gpa:{$gte:3, $lte:4}})
+
+db.collegers.find({name:{$in:["Anna","Natalia"]}})
+db.collegers.find({name:{$nin:["Anna","Natalia"]}})
+
+db.collegers.find({$and:[{fullTime:true},{age:{$lte:22}}]})
+
+db.collegers.find({$or:[{fullTime:true},{age:{$lte:22}}]})
+
+db.collegers.find({$nor:[{fullTime:true},{age:{$lte:22}}]})
+
+db.collegers.find({age:{$not:{$lt:30}}})
