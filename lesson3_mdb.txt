@@ -1,0 +1,42 @@
+ db.students.find()
+
+ db.students.find({"lessons.0":"english"}) /* finds documents where 1st element in the array equal to 'english'*/
+
+ db.students.find({},{lessons:{$slice:2}}) /* retrieving all documents from collection and for each document, it only includes the first two elements of the "lessons" array in the output. */
+
+  db.students.updateOne(
+      {_id:ObjectId('652797a07f02c266f29e5493')},
+      {$push:{lessons:{$each:['german','history']}}}
+      ) /* add several elements to the array */
+
+ db.students.updateOne(
+     {_id:ObjectId('652797a07f02c266f29e5493')},
+     {$pull:{lessons:"german"}}
+     ) /* removes element from the array */
+
+ db.students.updateOne(
+     {_id:ObjectId('652797a07f02c266f29e5493')},
+     {$unset:{'lessons.1':true}}
+     ) /* removes element at the specified index */
+
+ db.students.updateOne(
+     {_id:ObjectId('652797a07f02c266f29e5493')},
+     {$pop:{lessons:-1}}
+     ) /* removes the 1st element in the array */
+
+ db.students.updateOne(
+     {_id:ObjectId('652797a07f02c266f29e5493')},
+     {$pop:{lessons:1}}
+     ) /* removes the last element in the array */
+
+ db.students.updateOne(
+     {_id:ObjectId('652797a07f02c266f29e5493')},
+     {$addToSet:{lessons:"geology"}}
+     ) /* add an element to an array if it's not already present */
+
+ /*  ********** Не працюючих батьків влаштувати офіціантами  */
+ db.students.updateMany(
+     {parents:{$exists:true},'parents.profession':null},
+     {$set:{'parents.$[item].profession':"waiter"}},
+     {arrayFilters:[{'item.profession':null}]}
+     )
